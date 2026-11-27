@@ -25,6 +25,12 @@ Xcode is open.
 ### Features
 
 - **Scan** curated high-value roots and show size, path, and a protection note.
+- **Open Folder** (or double-click a row) drills into a folder and lists the
+  individual files and subfolders at that level with sizes. **Up** and **Home**
+  navigate back.
+- **Delete Selected** removes multi-selected rows after a two-click
+  confirmation. Protected rows (VM disks, Docker state, source repos, game
+  data, Xcode internals) are skipped, never deleted.
 - **Reveal** any row in Finder.
 - **Xcode Sizes** — break down `~/Library/Developer/Xcode` instantly.
 - **Check Runtimes** — preview exactly what `simctl --outdated` would delete.
