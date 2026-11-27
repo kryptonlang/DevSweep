@@ -45,6 +45,16 @@ func baseName(path) {
     emit substring(path, slash + 1, len(path))
 }
 
+func paintButton(btn, bg, fg) {
+    // NSButton's own backgroundColor is drawn over by its system bezel.
+    // A borderless button with a layer background paints reliably.
+    msg_1(btn, "setBordered:", 0)
+    msg_1(btn, "setWantsLayer:", 1)
+    msg_1(msg(btn, "layer"), "setBackgroundColor:", msg(bg, "CGColor"))
+    okSetButtonTextColor(btn, fg)
+    emit 0
+}
+
 func appendRow(label, size, path, note) {
     okArrayAdd(okGet(gTable, "sweep.labels"), nsString(label))
     okArrayAdd(okGet(gTable, "sweep.sizes"), nsString(size))
@@ -199,18 +209,23 @@ just run {
     let accent = okSystemText()
     let blue = okSystemText()
     let amber = okSystemSecondaryText()
-    let danger = okSystemText()
-    if okDark(win) == 1 {
-        canvas = okRGB(27, 21, 38)       // canvas
+    let danger = okRGB(240, 113, 120)    // red in both appearances
+    let buttonBg = okSystemTextBg()
+    let buttonText = bodyText
+    let dark = okDark(win)
+    if dark == 1 {
+        canvas = okRGB(58, 47, 76)       // tabOn - title bar purple
         surface = okRGB(41, 32, 55)      // surface
         bodyText = okRGB(214, 219, 228)  // text
         muted = okRGB(154, 163, 178)     // muted
         accent = okRGB(199, 146, 234)    // purple
         blue = okRGB(99, 179, 245)       // blue
         amber = okRGB(230, 192, 123)     // amber
-        danger = okRGB(240, 113, 120)    // red
+        buttonBg = okRGB(46, 37, 61)     // tab - buttons, almost title bar
+        buttonText = okRGB(255, 255, 255)
     }
     okSetWindowBg(win, canvas)
+    msg_1(win, "setTitlebarAppearsTransparent:", dark)
 
     let title = okLabel(win, "DevSweep - scan large folders, then clean Xcode safely", 20, 618, 900, 26)
     okSetFont(title, okMonoFont(13))
@@ -222,12 +237,12 @@ just run {
     let deleteButton = okButton(win, "Delete Outdated", 430, 580, 150, 30)
     let derivedButton = okButton(win, "Clear DerivedData", 590, 580, 170, 30)
     let revealButton = okButton(win, "Reveal", 770, 580, 100, 30)
-    okSetButtonTextColor(scanButton, blue)
-    okSetButtonTextColor(xcodeButton, blue)
-    okSetButtonTextColor(checkButton, blue)
-    okSetButtonTextColor(revealButton, blue)
-    okSetButtonTextColor(derivedButton, amber)
-    okSetButtonTextColor(deleteButton, danger)
+    paintButton(scanButton, buttonBg, buttonText)
+    paintButton(xcodeButton, buttonBg, buttonText)
+    paintButton(checkButton, buttonBg, buttonText)
+    paintButton(revealButton, buttonBg, buttonText)
+    paintButton(derivedButton, buttonBg, buttonText)
+    paintButton(deleteButton, buttonBg, danger)
 
     gStatus = okLabel(win, "Ready", 20, 546, 900, 24)
     okSetTextColor(gStatus, muted)
