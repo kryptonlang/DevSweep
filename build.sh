@@ -15,7 +15,8 @@ fi
 
 "$KCC" --version
 "$KCC" -r "$HELPER" "$SRC" DevSweep \
-  --out "$OUT" --id dev.t3m3d.devsweep --version 0.1.0 --compiler "$KCC"
+  --out "$OUT" --id dev.t3m3d.devsweep --version 0.1.0 \
+  --icon "$HERE/assets/devsweep.icns" --compiler "$KCC"
 
 if [[ -n "${DEV_IDENTITY:-}" ]]; then
   codesign --force --options runtime --timestamp \

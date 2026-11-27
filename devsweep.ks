@@ -190,8 +190,31 @@ just run {
     okMenuSelector(editMenu, "Paste", "v", "paste:")
     okMenuSelector(editMenu, "Select All", "a", "selectAll:")
 
+    // Cortex for macOS palette (dark roles from PXBridge.m / transmute.ks).
+    // Light mode keeps native system colors, matching Cortex's dynamic scheme.
+    let canvas = okSystemWindowBg()
+    let surface = okSystemTextBg()
+    let bodyText = okSystemText()
+    let muted = okSystemSecondaryText()
+    let accent = okSystemText()
+    let blue = okSystemText()
+    let amber = okSystemSecondaryText()
+    let danger = okSystemText()
+    if okDark(win) == 1 {
+        canvas = okRGB(27, 21, 38)       // canvas
+        surface = okRGB(41, 32, 55)      // surface
+        bodyText = okRGB(214, 219, 228)  // text
+        muted = okRGB(154, 163, 178)     // muted
+        accent = okRGB(199, 146, 234)    // purple
+        blue = okRGB(99, 179, 245)       // blue
+        amber = okRGB(230, 192, 123)     // amber
+        danger = okRGB(240, 113, 120)    // red
+    }
+    okSetWindowBg(win, canvas)
+
     let title = okLabel(win, "DevSweep - scan large folders, then clean Xcode safely", 20, 618, 900, 26)
-    okSetTextColor(title, okSystemText())
+    okSetFont(title, okMonoFont(13))
+    okSetTextColor(title, accent)
 
     let scanButton = okButton(win, "Scan Home", 20, 580, 120, 30)
     let xcodeButton = okButton(win, "Xcode Sizes", 150, 580, 120, 30)
@@ -199,9 +222,15 @@ just run {
     let deleteButton = okButton(win, "Delete Outdated", 430, 580, 150, 30)
     let derivedButton = okButton(win, "Clear DerivedData", 590, 580, 170, 30)
     let revealButton = okButton(win, "Reveal", 770, 580, 100, 30)
+    okSetButtonTextColor(scanButton, blue)
+    okSetButtonTextColor(xcodeButton, blue)
+    okSetButtonTextColor(checkButton, blue)
+    okSetButtonTextColor(revealButton, blue)
+    okSetButtonTextColor(derivedButton, amber)
+    okSetButtonTextColor(deleteButton, danger)
 
     gStatus = okLabel(win, "Ready", 20, 546, 900, 24)
-    okSetTextColor(gStatus, okSystemSecondaryText())
+    okSetTextColor(gStatus, muted)
 
     gTable = okTable(win, 20, 250, 900, 286)
     okMultiSelect(gTable, 0)
@@ -210,6 +239,7 @@ just run {
     okColumn(gTable, "path", "Path", 500)
     okColumn(gTable, "note", "Note", 88)
     okRowHeight(gTable, 24)
+    msg_1(gTable, "setBackgroundColor:", surface)
     let scroll = msg(gTable, "enclosingScrollView")
     okAutoresizing(scroll, 18)
     okSet(gTable, "sweep.labels", okArray())
@@ -219,7 +249,8 @@ just run {
 
     gLog = okTextView(win, 20, 40, 900, 190)
     okSetTextView(gLog, "Welcome to DevSweep.\nScan to find large folders. Xcode actions only touch build caches and outdated simulator runtimes.\nProtected: .lima VMs, Docker state, game data, CodingAssistant.")
-    okSetTextColor(gLog, okSystemText())
+    okSetBg(gLog, surface)
+    okSetTextColor(gLog, bodyText)
 
     okClick(scanButton, funcptr(onScan))
     okClick(xcodeButton, funcptr(onXcodeSizes))
